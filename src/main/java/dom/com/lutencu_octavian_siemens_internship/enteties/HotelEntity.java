@@ -1,5 +1,6 @@
 package dom.com.lutencu_octavian_siemens_internship.enteties;
 
+import dom.com.lutencu_octavian_siemens_internship.config.dto_for_seed.HotelDTOForSeed;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -30,14 +31,10 @@ public class HotelEntity {
 
     public HotelEntity() {}
 
-    public HotelEntity(Long id, String name, Double latitude,
-                       Double longitude, String comment, List<RoomEntity> roomEntityList) {
-        this.id = id;
-        this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.comment = comment;
-        this.roomEntityList = roomEntityList;
+    public HotelEntity(HotelDTOForSeed hotel) {
+        this.name = hotel.getName();
+        this.latitude = hotel.getLatitude();
+        this.longitude = hotel.getLongitude();
     }
 
     public Long getId() {
