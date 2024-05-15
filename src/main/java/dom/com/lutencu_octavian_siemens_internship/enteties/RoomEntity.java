@@ -1,8 +1,13 @@
 package dom.com.lutencu_octavian_siemens_internship.enteties;
 
+import dom.com.lutencu_octavian_siemens_internship.config.dto_for_seed.RoomDTOForSeed;
+import dom.com.lutencu_octavian_siemens_internship.converters.BooleanConverter;
 import jakarta.persistence.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name="rooms")
@@ -12,6 +17,7 @@ public class RoomEntity {
     @Column(name = "id")
     private Long id;
 
+    @Column(name="room_number", nullable = false)
     private Integer roomNumber;
 
     @Enumerated(EnumType.STRING)
@@ -21,53 +27,38 @@ public class RoomEntity {
     @Column(name="price", nullable = false)
     private Integer price;
 
-    @Column(name="isAvailable", nullable = false, columnDefinition = "boolean")
+    @Convert(converter = BooleanConverter.class)
+    @Column(name="isAvailable", nullable = false)
     private Boolean isAvailable;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="hotel_id")
     private HotelEntity hotelEntity;
 
-
     public enum RoomTypeEnum {
-        SINGLE_ROOM("single_room"),
-        DOUBLE_ROOM("double_room"),
-        SUITE_ROOM("suite_room"),
-        MATRIMONIAL_ROOM("matrimonial_room");
-        private final String label;
+        SINGLE_ROOM,
+        DOUBLE_ROOM,
+        SUITE_ROOM,
+        MATRIMONIAL_ROOM;
 
-        RoomTypeEnum(String label) {
-            this.label = label;
-        }
-
-        public static RoomTypeEnum valueOfLabel(String label) {
-            for (RoomTypeEnum roomType : values()) {
-                if (roomType.label.equals(label)) {
-                    return roomType;
-                }
-            }
-            return null;
+        public static RoomTypeEnum getEnumTypeByVal(Integer val) {
+            Map<Integer, RoomTypeEnum> mapOfIntAndEnum = Arrays.stream(values())
+                    .collect(Collectors.toMap(enumValue -> enumValue.ordinal() + 1, valued -> valued));
+            return mapOfIntAndEnum.get(val);
         }
 
         public static List<RoomTypeEnum> getAllValuesOfEnum() {
             return List.of(values());
         }
-
-        @Override
-        public String toString() {
-            return label;
-        }
     }
 
     public RoomEntity() {}
 
-    public RoomEntity(Long id, Integer roomNumber, RoomTypeEnum roomType,
-                      Integer price, Boolean isAvailable, HotelEntity hotelEntity) {
-        this.id = id;
-        this.roomNumber = roomNumber;
-        this.roomType = roomType;
-        this.price = price;
-        this.isAvailable = isAvailable;
+    public RoomEntity(RoomDTOForSeed room, HotelEntity hotelEntity) {
+        this.roomNumber = room.getRoomNumber();
+        this.roomType = RoomTypeEnum.getEnumTypeByVal(room.getType());
+        this.price = room.getPrice();
+        this.isAvailable = room.getAvailable();
         this.hotelEntity = hotelEntity;
     }
 
