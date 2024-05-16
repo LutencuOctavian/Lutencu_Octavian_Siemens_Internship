@@ -26,7 +26,7 @@ public class HotelController {
 
     @RequestMapping(path="/search", method = RequestMethod.POST)
     public ResponseEntity<List<HotelDTO>> findNearByHotelsForUser(@RequestBody @Valid UserHotelRequestWithRangeDTO userHotelRequestWithRangeDTO){
-
-        return ResponseEntity.status(200).body(hotelService.searchHotelsInRange(userHotelRequestWithRangeDTO));
+        List<HotelDTO> hotelDTOS = hotelService.searchHotelsInRange(userHotelRequestWithRangeDTO);
+        return ResponseEntity.status(200).body(hotelDTOS);
     }
 }

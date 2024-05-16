@@ -24,11 +24,11 @@ public class HotelEntity {
     @Column(name="longitude", nullable = false)
     private Double longitude;
 
-    @Column(name="comment", columnDefinition = "TEXT")
-    private String comment;
-
     @OneToMany(mappedBy = "hotelEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<RoomEntity> roomEntityList;
+
+    @OneToMany(mappedBy = "commentEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<CommentEntity> commentEntityList;
 
     public HotelEntity() {}
 
@@ -70,19 +70,19 @@ public class HotelEntity {
         this.longitude = longitude;
     }
 
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
     public List<RoomEntity> getRoomEntityList() {
         return roomEntityList;
     }
 
     public void setRoomEntityList(List<RoomEntity> roomEntityList) {
         this.roomEntityList = roomEntityList;
+    }
+
+    public List<CommentEntity> getCommentEntityList() {
+        return commentEntityList;
+    }
+
+    public void setCommentEntityList(List<CommentEntity> commentEntityList) {
+        this.commentEntityList = commentEntityList;
     }
 }
