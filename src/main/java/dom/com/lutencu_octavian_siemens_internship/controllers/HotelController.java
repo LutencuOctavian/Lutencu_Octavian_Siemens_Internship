@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping(path = "/hotel")
 public class HotelController {
@@ -25,8 +23,12 @@ public class HotelController {
     }
 
     @RequestMapping(path="/search", method = RequestMethod.POST)
-    public ResponseEntity<List<HotelDTO>> findNearByHotelsForUser(@RequestBody @Valid UserHotelRequestWithRangeDTO userHotelRequestWithRangeDTO){
-        List<HotelDTO> hotelDTOS = hotelService.searchHotelsInRange(userHotelRequestWithRangeDTO);
-        return ResponseEntity.status(200).body(hotelDTOS);
+    public ResponseEntity<Object> findNearByHotelsForUser(@RequestBody @Valid UserHotelRequestWithRangeDTO userHotelRequestWithRangeDTO){
+        try{
+            return ResponseEntity.status(200).body(hotelService.searchHotelsInRange(userHotelRequestWithRangeDTO));
+        }catch(RuntimeException ex){
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+
     }
 }

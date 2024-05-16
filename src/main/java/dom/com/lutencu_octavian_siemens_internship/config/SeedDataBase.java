@@ -12,6 +12,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.time.LocalTime;
 import java.util.List;
 
 @Component
@@ -34,8 +35,13 @@ public class SeedDataBase {
         String jsonString = readAuxiliarFile(FILE_NAME);
         ObjectMapper mapper = new ObjectMapper();
         List<HotelDTOForSeed> hotelList = mapper.readValue(jsonString, new TypeReference<List<HotelDTOForSeed>>(){});
+        LocalTime checkIn = LocalTime.of(14, 0, 0);
+        LocalTime checkOut = LocalTime.of(12, 0, 0);
+
 
         hotelList.forEach(hotel->{
+            hotel.setCheckIn(checkIn);
+            hotel.setCheckOut(checkOut);
             final HotelEntity hotelEntity = hotelRepository.save(new HotelEntity(hotel));
 
             hotel.getRooms().parallelStream()
