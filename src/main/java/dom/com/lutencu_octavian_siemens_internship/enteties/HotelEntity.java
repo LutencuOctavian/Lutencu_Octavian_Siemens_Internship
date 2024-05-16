@@ -6,7 +6,8 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name="hotels")
+@Table(name="hotels", indexes = {@Index(name="ind_latitude", columnList = "latitude"),
+                                    @Index(name="ind_longitude", columnList = "longitude")})
 public class HotelEntity {
 
     @Id
