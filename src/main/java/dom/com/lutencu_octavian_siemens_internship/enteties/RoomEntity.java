@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name="rooms")
+@Table(name="rooms", indexes = {@Index(name="ind_id", columnList = "id")})
 public class RoomEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,6 +1,7 @@
 package dom.com.lutencu_octavian_siemens_internship.repositories;
 
 import dom.com.lutencu_octavian_siemens_internship.dto.HotelDTO;
+import dom.com.lutencu_octavian_siemens_internship.dto.RoomDTO;
 import dom.com.lutencu_octavian_siemens_internship.enteties.HotelEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,4 +19,10 @@ public interface HotelRepository extends JpaRepository<HotelEntity, Long> {
                                                         @Param("maxLat") double maxLat,
                                                         @Param("minLong") double minLong,
                                                         @Param("maxLong") double maxLong);
+
+    @Query("select new dom.com.lutencu_octavian_siemens_internship.dto.RoomDTO(room.id, room.roomNumber, room.roomType, room.price, room.isAvailable) " +
+            "from HotelEntity hotel " +
+            " inner join RoomEntity room on room.hotelEntity.id = hotel.id " +
+            "where room.isAvailable = true and hotel.id = :hotelId")
+    Optional<List<RoomDTO>> findAllAvailableRoomsForHotelById(@Param("hotelId") Long hotelId);
 }

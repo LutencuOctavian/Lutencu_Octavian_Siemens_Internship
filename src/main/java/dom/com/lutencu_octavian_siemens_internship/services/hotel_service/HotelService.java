@@ -1,7 +1,9 @@
 package dom.com.lutencu_octavian_siemens_internship.services.hotel_service;
 
 import dom.com.lutencu_octavian_siemens_internship.dto.HotelDTO;
+import dom.com.lutencu_octavian_siemens_internship.dto.RoomDTO;
 import dom.com.lutencu_octavian_siemens_internship.dto.UserHotelRequestWithRangeDTO;
+import dom.com.lutencu_octavian_siemens_internship.enteties.RoomEntity;
 import dom.com.lutencu_octavian_siemens_internship.repositories.HotelRepository;
 import dom.com.lutencu_octavian_siemens_internship.services.geographic_coordinate_system.GeographicCoordinateSystemInterface;
 import dom.com.lutencu_octavian_siemens_internship.services.geographic_coordinate_system.LatitudeLongitudeMinMaxRange;
@@ -11,12 +13,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class HotelService implements IHotelService<UserHotelRequestWithRangeDTO, HotelDTO>{
 
     private final GeographicCoordinateSystemInterface<LatitudeLongitudeMinMaxRange, UserHotelRequestWithRangeDTO> geographicCoordinateSystem;
-    private final HotelRepository hotelRepository;
+    private HotelRepository hotelRepository;
     @Autowired
     public HotelService(@Qualifier("naiveGeographicCoordinateSystemService")
                             GeographicCoordinateSystemInterface<LatitudeLongitudeMinMaxRange, UserHotelRequestWithRangeDTO> geographicCoordinateSystemInterface,
@@ -53,6 +57,15 @@ public class HotelService implements IHotelService<UserHotelRequestWithRangeDTO,
                                                           latitudeLongitudeMinMaxRange.getMaxLatitude(),
                                                           latitudeLongitudeMinMaxRange.getMinLongitude(),
                                                           latitudeLongitudeMinMaxRange.getMaxLongitude())
-                                    .orElse(new ArrayList<>());
+                                    .orElse(new ArrayList<>())
+                                    .parallelStream()
+                                    .map(hotel -> getAvailableRoomsForHotel.apply(hotel))
+                                    .collect(Collectors.toList());
     }
+
+    private final Function<HotelDTO, HotelDTO> getAvailableRoomsForHotel = hotel ->{
+        List<RoomDTO> roomDTOs = hotelRepository.findAllAvailableRoomsForHotelById(hotel.getId()).orElse(new ArrayList<>());
+        hotel.setRoomDTOList(roomDTOs);
+        return hotel;
+    };
 }
