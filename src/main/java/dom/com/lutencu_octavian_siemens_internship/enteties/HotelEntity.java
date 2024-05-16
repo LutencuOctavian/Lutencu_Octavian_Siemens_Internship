@@ -27,7 +27,7 @@ public class HotelEntity {
     @OneToMany(mappedBy = "hotelEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<RoomEntity> roomEntityList;
 
-    @OneToMany(mappedBy = "commentEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "hotelEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<CommentEntity> commentEntityList;
 
     public HotelEntity() {}
