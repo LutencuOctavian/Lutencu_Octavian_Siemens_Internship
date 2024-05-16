@@ -12,6 +12,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.time.LocalTime;
 import java.util.List;
 
 @Component
@@ -31,11 +32,16 @@ public class SeedDataBase {
 //    @EventListener
     public void seed(ContextRefreshedEvent event) throws IOException {
 
-        String jsonString = readAuxiliarFile(FILE_NAME);
+        String jsonString = readAuxiliarFile();
         ObjectMapper mapper = new ObjectMapper();
-        List<HotelDTOForSeed> hotelList = mapper.readValue(jsonString, new TypeReference<List<HotelDTOForSeed>>(){});
+        List<HotelDTOForSeed> hotelList = mapper.readValue(jsonString, new TypeReference<>(){});
+        LocalTime checkIn = LocalTime.of(14, 0, 0);
+        LocalTime checkOut = LocalTime.of(12, 0, 0);
+
 
         hotelList.forEach(hotel->{
+            hotel.setCheckIn(checkIn);
+            hotel.setCheckOut(checkOut);
             final HotelEntity hotelEntity = hotelRepository.save(new HotelEntity(hotel));
 
             hotel.getRooms().parallelStream()
@@ -45,8 +51,8 @@ public class SeedDataBase {
 
     }
 
-    private String readAuxiliarFile(String fileName) throws IOException {
-        File file = new File(fileName);
+    private String readAuxiliarFile() throws IOException {
+        File file = new File(SeedDataBase.FILE_NAME);
         BufferedReader br = new BufferedReader(new FileReader(file));
         String st;
         StringBuilder stringBuilder = new StringBuilder();
