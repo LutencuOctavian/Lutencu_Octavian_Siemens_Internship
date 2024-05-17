@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface RoomRepository extends JpaRepository<RoomEntity, Long> {
@@ -20,4 +21,9 @@ public interface RoomRepository extends JpaRepository<RoomEntity, Long> {
             "inner join HotelEntity hotel on hotel.id = room.hotelEntity.id " +
             "where room.id = :roomId")
     Optional<HotelEntity> findHotelByRoomId(@Param("roomId") Long roomId);
+
+    @Query("select room " +
+            "from RoomEntity room " +
+            "where room.isAvailable=false")
+    Optional<List<RoomEntity>> getAllBookedRooms();
 }
