@@ -1,7 +1,8 @@
 package dom.com.lutencu_octavian_siemens_internship.controllers;
 
 import dom.com.lutencu_octavian_siemens_internship.dto.RoomDTO;
-import dom.com.lutencu_octavian_siemens_internship.exceptions.RoomOrHotelNotFoundException;
+import dom.com.lutencu_octavian_siemens_internship.exceptions.HotelNotFoundException;
+import dom.com.lutencu_octavian_siemens_internship.exceptions.RoomNotFoundException;
 import dom.com.lutencu_octavian_siemens_internship.services.room_service.IRoomService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class RoomController {
         try{
             return ResponseEntity.status(200).body(roomService.bookRoom(roomDTO));
         }catch(RuntimeException ex){
-            return ResponseEntity.badRequest().body(ex.getMessage());
+            return ResponseEntity.status(500).body(ex.getMessage());
         }
     }
 
@@ -35,7 +36,7 @@ public class RoomController {
         try{
             return ResponseEntity.status(200).body(roomService.bookRoom(listOfRoomDTO));
         }catch(RuntimeException ex){
-            return ResponseEntity.badRequest().body(ex.getMessage());
+            return ResponseEntity.status(500).body(ex.getMessage());
         }
     }
 
@@ -43,7 +44,7 @@ public class RoomController {
     public ResponseEntity<Object> cancelReservation(@PathVariable("roomId") Long roomId){
         try {
             return ResponseEntity.status(200).body(roomService.cancelReservationRoom(roomId));
-        }catch (RoomOrHotelNotFoundException ex){
+        }catch (RoomNotFoundException | HotelNotFoundException ex){
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }

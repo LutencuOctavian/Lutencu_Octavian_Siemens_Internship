@@ -3,7 +3,8 @@ package dom.com.lutencu_octavian_siemens_internship.services.room_service;
 import dom.com.lutencu_octavian_siemens_internship.dto.RoomDTO;
 import dom.com.lutencu_octavian_siemens_internship.enteties.HotelEntity;
 import dom.com.lutencu_octavian_siemens_internship.enteties.RoomEntity;
-import dom.com.lutencu_octavian_siemens_internship.exceptions.RoomOrHotelNotFoundException;
+import dom.com.lutencu_octavian_siemens_internship.exceptions.HotelNotFoundException;
+import dom.com.lutencu_octavian_siemens_internship.exceptions.RoomNotFoundException;
 import dom.com.lutencu_octavian_siemens_internship.repositories.RoomRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,11 +68,11 @@ public class RoomService implements IRoomService<RoomDTO>{
     @Override
     public boolean cancelReservationRoom(Long roomId) {
         RoomEntity roomEntityFromDB = roomRepository.findRoomById(roomId)
-                                        .orElseThrow(()->new RoomOrHotelNotFoundException("Room not found"));
+                                        .orElseThrow(()->new RoomNotFoundException("Room not found"));
 
         if(!roomEntityFromDB.getAvailable()){
             HotelEntity hotel = roomRepository.findHotelByRoomId(roomId)
-                                    .orElseThrow(()-> new RoomOrHotelNotFoundException("Hotel not found"));
+                                    .orElseThrow(()-> new HotelNotFoundException("Hotel not found"));
 
             LocalTime checkIn = hotel.getCheckIn();
             LocalTime now = LocalTime.now();

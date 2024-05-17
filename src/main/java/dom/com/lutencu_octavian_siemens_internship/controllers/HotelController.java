@@ -27,7 +27,7 @@ public class HotelController {
         try{
             return ResponseEntity.status(200).body(hotelService.searchHotelsInRange(userHotelRequestWithRangeDTO));
         }catch(RuntimeException ex){
-            return ResponseEntity.badRequest().body(ex.getMessage());
+            return ResponseEntity.status(500).body(ex.getMessage());
         }
 
     }
