@@ -1,10 +1,17 @@
 package dom.com.lutencu_octavian_siemens_internship.enteties;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
 @Entity
 @Table(name="users")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,8 +31,6 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "userEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<CommentEntity> commentEntityList;
-
-    public UserEntity() {}
 
     public Long getId() {
         return id;

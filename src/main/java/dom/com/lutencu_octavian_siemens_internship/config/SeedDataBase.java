@@ -5,10 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dom.com.lutencu_octavian_siemens_internship.config.dto_for_seed.HotelDTOForSeed;
 import dom.com.lutencu_octavian_siemens_internship.enteties.HotelEntity;
 import dom.com.lutencu_octavian_siemens_internship.enteties.RoomEntity;
+import dom.com.lutencu_octavian_siemens_internship.enteties.UserEntity;
 import dom.com.lutencu_octavian_siemens_internship.repositories.HotelRepository;
 import dom.com.lutencu_octavian_siemens_internship.repositories.RoomRepository;
+import dom.com.lutencu_octavian_siemens_internship.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -21,12 +24,17 @@ public class SeedDataBase {
     private static final String FILE_NAME = "json_db.txt";
     private final HotelRepository hotelRepository;
     private final RoomRepository roomRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Autowired
-    public SeedDataBase(HotelRepository hotelRepository, RoomRepository roomRepository) {
+    public SeedDataBase(HotelRepository hotelRepository, RoomRepository roomRepository,
+                        UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.hotelRepository = hotelRepository;
         this.roomRepository = roomRepository;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 //    @EventListener
@@ -49,6 +57,7 @@ public class SeedDataBase {
                     .forEach(roomRepository::save);
         });
 
+        createTwoUsers();
     }
 
     private String readAuxiliarFile() throws IOException {
@@ -62,5 +71,23 @@ public class SeedDataBase {
         }
 
         return stringBuilder.toString();
+    }
+
+    private void createTwoUsers() {
+        UserEntity user1 = UserEntity.builder()
+                .userName("pop.alex")
+                .password(passwordEncoder.encode("alex"))
+                .firstName("Pop")
+                .lastName("Alex")
+                .build();
+
+        UserEntity user2 = UserEntity.builder()
+                .userName("popescu.eduard")
+                .password(passwordEncoder.encode("eduard"))
+                .firstName("Popescu")
+                .lastName("Eduard")
+                .build();
+
+        userRepository.saveAll(List.of(user1, user2));
     }
 }

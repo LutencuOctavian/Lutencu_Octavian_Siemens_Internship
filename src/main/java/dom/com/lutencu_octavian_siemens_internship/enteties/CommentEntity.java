@@ -1,9 +1,15 @@
 package dom.com.lutencu_octavian_siemens_internship.enteties;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name="comments")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CommentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +26,6 @@ public class CommentEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private UserEntity userEntity;
-
-    public CommentEntity() {}
 
     public Long getId() {
         return id;
@@ -54,4 +58,7 @@ public class CommentEntity {
     public void setUserEntity(UserEntity userEntity) {
         this.userEntity = userEntity;
     }
+
+    public Long getUserId(){return userEntity.getId();}
+    public Long getHotelId(){return hotelEntity.getId();}
 }

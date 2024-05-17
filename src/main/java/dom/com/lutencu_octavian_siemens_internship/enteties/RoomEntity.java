@@ -58,7 +58,7 @@ public class RoomEntity {
         this.roomNumber = room.getRoomNumber();
         this.roomType = RoomTypeEnum.getEnumTypeByVal(room.getType());
         this.price = room.getPrice();
-        this.isAvailable = room.getAvailable();
+        this.isAvailable = room.getIsAvailable();
         this.hotelEntity = hotelEntity;
     }
 
